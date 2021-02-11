@@ -4,7 +4,6 @@ This is a Python template for Alexa to get you the daily snow forecasts read to 
 
 from __future__ import print_function
 import random
-from insults import get_insult
 import requests
 from bs4 import BeautifulSoup
 
