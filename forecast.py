@@ -12,11 +12,13 @@ elems_summary = soup.select('.post > p:nth-child(3)')
 summary = elems_summary[0].text
 # print(summary)
 
-elems_shortforecast1 = soup.select('.all-access-content')
+elems_forecast = soup.select('.all-access-content')
 # elems_shortforecast2 = soup.select('.all-access-content > p:nth-child(3)')
-short_forecast = elems_shortforecast1[0].text
+detailed_forecast = elems_forecast[0].text
 # short_forecast2 = elems_shortforecast2[0].text
-print(short_forecast)
+
+report = f'{summary} {detailed_forecast}'
+print(report)
 
 #pagebox > div.page-body > div.d-lg-flex > div.w-100.dailysnow > div.dailysnow-post.content-block > div.post > p
 # .all-access-content > p:nth-child(2)
