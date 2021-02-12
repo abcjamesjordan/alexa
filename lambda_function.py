@@ -1,11 +1,29 @@
 """
-This is a Python template for Alexa to get you the daily snow forecasts read to you.
+This is a python lambda function to start a conversation with alexa so she can 
+Daily Snow reports to you as they are specified.
 """
 
 from __future__ import print_function
 import random
 import requests
 from bs4 import BeautifulSoup
+
+class Forecast:
+    def __init__(self, url, css_selector='.post > p:nth-child(3)', css_selector_detail='.all-access-content'):
+        self.url = url
+        self.css_selector = css_selector
+        self.css_selector_detail = css_selector_detail
+    def get_forecast(self):
+        get_summary = requests.get(self.url)
+        soup_text = BeautifulSoup(get_summary.text, 'html.parser')
+        elems_summary = soup_text.select(self.css_selector)
+        return elems_summary[0].text
+    def get_forecast_detailed(self):
+        get_summary = requests.get(self.url)
+        soup_text = BeautifulSoup(get_summary.text, 'html.parser')
+        elems_summary = soup_text.select(self.css_selector)
+        elems_details = soup_text.select(self.css_selector_detail)
+        return f'{elems_summary[0].text} {elems_details[0].text}'
 
 
 # --------------- Helpers that build all of the responses ----------------------
@@ -39,43 +57,90 @@ def build_response(session_attributes, speechlet_response):
 
 
 # --------------- Functions that control the skill's behavior ------------------
-# def get_test_response():
-#     """ An example of a custom intent. Same structure as welcome message, just make sure to add this intent
-#     in your alexa skill in order for it to work.
-#     """
-#     session_attributes = {}
-#     card_title = "Test"
-#     speech_output = "This is a test message"
-#     reprompt_text = "You never responded to the first test message. Sending another one."
-#     should_end_session = False
-#     return build_response(session_attributes, build_speechlet_response(
-#         card_title, speech_output, reprompt_text, should_end_session))
-        
-def get_forecast_response():
-    """ An example of a forecast intent. Reads the Colorado Daily Snow forecast of the time of requesting.
+def get_test_response():
+    """ An example of a custom intent. Same structure as welcome message, just make sure to add this intent
+    in your alexa skill in order for it to work.
     """
     session_attributes = {}
-    card_title = "Forecast"
-    snow_summary = requests.get('https://opensnow.com/dailysnow/colorado')
-    soup = BeautifulSoup(snow_summary.text, 'html.parser')
-    elems = soup.select('.post > p:nth-child(3)')
-    summary = elems[0].text
-    
-    speech_output = summary
-    reprompt_text = "Would you like me to read that again?"
+    card_title = "Test"
+    speech_output = "This is a test message"
+    reprompt_text = "You never responded to the first test message. Sending another one."
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
-        
-        
+
 def get_welcome_response():
     """ If we wanted to initialize the session to have some attributes we could
     add those here
     """
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "What up, daily snow application started!"
-    reprompt_text = "I don't know if you heard me, welcome to your daily snow alexa application!"
+    speech_output = "Welcome, which daily snow would you like to hear?"
+    reprompt_text = "Which daily snow would you like me to read to you?"
+    should_end_session = False
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+        
+def get_forecast_response():
+    session_attributes = {}
+    card_title = "Forecast"
+    
+    # Gathering the daily snow forecast summary
+    co_daily = Forecast('https://opensnow.com/dailysnow/colorado', '.post > p:nth-child(3)')
+    co_daily_forecast = Forecast.get_forecast(co_daily)
+    
+    speech_output = f'Here is your Colorado Daily Snow. {co_daily_forecast}'
+    # If the user either does not reply to the welcome message or says something
+    # that is not understood, they will be prompted again with this text.
+    reprompt_text = "Would you like me to read that again?"
+    should_end_session = False
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+        
+def get_detailed_forecast_response():
+    session_attributes = {}
+    card_title = "Detailed Forecast"
+    
+    # Gathering the daily snow forecast summary
+    co_daily_detailed = Forecast('https://opensnow.com/dailysnow/colorado', '.post > p:nth-child(3)', '.all-access-content')
+    co_daily_forecast_detailed = Forecast.get_forecast_detailed(co_daily_detailed)
+    
+    speech_output = f'Here is your detailed Colorado Daily Snow. {co_daily_forecast_detailed}'
+    # If the user either does not reply to the welcome message or says something
+    # that is not understood, they will be prompted again with this text.
+    reprompt_text = "Would you like me to read that again?"
+    should_end_session = False
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+        
+def get_uscanada_forecast_response():
+    session_attributes = {}
+    card_title = "U.S. Canada Forecast"
+    
+    # Gathering the daily snow forecast summary
+    uscanada = Forecast('https://opensnow.com/dailysnow/usandcanada', '.post > p:nth-child(3)')
+    uscanada_forecast = Forecast.get_forecast(uscanada)
+    
+    speech_output = f'Here is the U.S. and Canada daily snow. {uscanada_forecast}'
+    # If the user either does not reply to the welcome message or says something
+    # that is not understood, they will be prompted again with this text.
+    reprompt_text = "Would you like me to read that again?"
+    should_end_session = False
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+        
+def get_detailed_uscanada_forecast_response():
+    session_attributes = {}
+    card_title = "U.S. Canada Forecast"
+    
+    # Gathering the daily snow forecast summary
+    uscanada = Forecast('https://opensnow.com/dailysnow/usandcanada', '.post > p:nth-child(3)')
+    uscanada_forecast = Forecast.get_forecast(uscanada)
+    
+    speech_output = f'Here is the U.S. and Canada daily snow. {uscanada_forecast}'
+    # If the user either does not reply to the welcome message or says something
+    # that is not understood, they will be prompted again with this text.
+    reprompt_text = "Would you like me to read that again?"
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
@@ -115,14 +180,19 @@ def on_intent(intent_request, session):
 
     intent = intent_request['intent']
     intent_name = intent_request['intent']['name']
-
     # Dispatch to your skill's intent handlers
     if intent_name == "test":
         return get_test_response()
-    elif intent_name == "forecast":
-        return get_forecast_response()
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
+    elif intent_name == "forecast":
+        return get_forecast_response()
+    elif intent_name == "detailedforecast":
+        return get_detailed_forecast_response()
+    elif intent_name == "uscanadaforecast":
+        return get_uscanada_forecast_response()
+    elif intent_name == "detaileduscanadaforecast":
+        return get_detailed_uscanada_forecast_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
         return handle_session_end_request()
     else:
