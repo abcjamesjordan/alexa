@@ -10,8 +10,8 @@ Youtube: https://www.youtube.com/channel/UCq6XkhO5SZ66N04IcPbqNcw \
 GitHub: https://github.com/KeithGalli
 
 # Libraries
-Required libraries include **requests** and **beautifulsoup** to web scrape the text and format it in the correct output. If they are not installed already you can install them with:
-Requests: pip install requests
+Required libraries include **requests** and **beautifulsoup** to web scrape the text and format it in the correct output. If they are not installed already you can install them with: \
+Requests: pip install requests \
 Beautifulsoup: pip install beautifulsoup4
 
 # Supported Intents
