@@ -1,9 +1,12 @@
 """
 Python code to help construct web-scrapers for various open snow forecasts
 """
-import random
+import json
+from datetime import date
 import requests
 from bs4 import BeautifulSoup
+
+today = date.today()
 
 class Forecast:
     def __init__(self, url, css_selector='.post > p:nth-child(3)', css_selector_detail='.all-access-content'):
@@ -29,33 +32,37 @@ uscanada = Forecast('https://opensnow.com/dailysnow/usandcanada', '.post > p:nth
 uscanada_detailed = Forecast('https://opensnow.com/dailysnow/usandcanada', '.post > p:nth-child(3)', '.all-access-content')
 
 co_daily_forecast = Forecast.get_forecast(co_daily)
-co_daily_forecast_detailed = Forecast.get_forecast(co_daily_detailed)
+co_daily_forecast_detailed = Forecast.get_forecast_detailed(co_daily_detailed)
 uscanada_forecast = Forecast.get_forecast(uscanada)
-uscanada_forecast_detailed = Forecast.get_forecast(uscanada_detailed)
-
-print(type(co_daily_forecast))
-print(type(co_daily_forecast_detailed))
-print(type(uscanada_forecast))
-print(type(uscanada_forecast_detailed))
+uscanada_forecast_detailed = Forecast.get_forecast_detailed(uscanada_detailed)
 
 
+forecasts = {}
+forecasts['dailysnow'] = []
+forecasts['dailysnow'].append({
+    'name': 'Colorado Daily Snow',
+    'url': 'https://opensnow.com/dailysnow/colorado',
+    'text': co_daily_forecast,
+    'date_updated': str(today)
+})
+forecasts['dailysnow'].append({
+    'name': 'Colorado Daily Snow Detailed',
+    'url': 'https://opensnow.com/dailysnow/colorado',
+    'text': co_daily_forecast_detailed,
+    'date_updated': str(today)
+})
+forecasts['dailysnow'].append({
+    'name': 'U.S. & Canada Daily Snow',
+    'url': 'https://opensnow.com/dailysnow/usandcanada',
+    'text': uscanada_forecast,
+    'date_updated': str(today)
+})
+forecasts['dailysnow'].append({
+    'name': 'U.S. & Canada Daily Snow Detailed',
+    'url': 'https://opensnow.com/dailysnow/usandcanada',
+    'text': uscanada_forecast_detailed,
+    'date_updated': str(today)
+})
 
-
-# snow_summary = requests.get('https://opensnow.com/dailysnow/colorado')
-# soup = BeautifulSoup(snow_summary.text, 'html.parser')
-# elems_summary = soup.select('.post > p:nth-child(3)')
-# summary = elems_summary[0].text
-# # print(summary)
-
-# elems_forecast = soup.select('.all-access-content')
-# # elems_shortforecast2 = soup.select('.all-access-content > p:nth-child(3)')
-# detailed_forecast = elems_forecast[0].text
-# # short_forecast2 = elems_shortforecast2[0].text
-
-# report = f'{summary} {detailed_forecast}'
-# print(report)
-
-# #pagebox > div.page-body > div.d-lg-flex > div.w-100.dailysnow > div.dailysnow-post.content-block > div.post > p
-# # .all-access-content > p:nth-child(2)
-# # .all-access-content > p:nth-child(3)
-# # .all-access-content
+with open('forecasts.json', 'w') as outfile:
+    json.dump(forecasts, outfile, indent=4, ensure_ascii=False)
