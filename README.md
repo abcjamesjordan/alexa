@@ -1,6 +1,6 @@
 # About
 
-This repository contains a lambda_function.py that can be used along with **Alexa** and **AWS Lambda** to have the OpenSnow daily snow forecasts read aloud on your Alexa device. Process involves invoking a conversation with Alexa and using python to download the daily snow forecast that the user requests.
+This repository contains a lambda_function.py that can be used along with **Alexa** and **AWS Lambda** to download the OpenSnow daily snow forecasts and have them read aloud on your Alexa device. Process involves invoking a conversation with Alexa and using python to download the daily snow forecast that the user requests. Other files included python files and data files that are involved with the future work for this project.
 
 # Libraries
 Required libraries include **requests** and **beautifulsoup** to web scrape the text and format it in the correct output.
