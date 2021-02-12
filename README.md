@@ -24,6 +24,6 @@ So far the only supported Alexa intents (daily snow forecasts) are as follows:
 - detaileduscanada: U.S. & Canada Daily Snow Full Report
 
 # Future Work
-I would like to at some point streamline this process and have a seperate lambda function for downloading the daily snow forecasts and storing them seperate from the lambda function for the alexa development skills. I envision using either AWS **S3** or **DynamoDB** for this.
+I would like to at some point streamline this process and have a seperate lambda function for downloading the daily snow forecasts and storing them seperate from the lambda function for the alexa development skills. I envision using either AWS **S3** or **DynamoDB** for this. Additional help for implementing this can be found here: https://lumigo.io/learn/aws-lambda-boto3/
 
 Another future work includes modifying the lambda_function to enable the text to scroll as it is read aloud with Alexa. When the detail reports are pulled, often the text is far to long to fit onto an Alexa enable display. Link to help with this can be found here: https://developer.amazon.com/en-US/docs/alexa/alexa-presentation-language/display-text-on-the-screen.html
