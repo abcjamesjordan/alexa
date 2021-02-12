@@ -13,3 +13,5 @@ Required libraries include **requests** and **beautifulsoup** to web scrape the 
 
 # Future Work
 I would like to at some point streamline this process and have a seperate lambda function for downloading the daily snow forecasts and storing them seperate from the lambda function for the alexa development skills. I envision using either AWS **S3** or **DynamoDB** for this.
+
+Another future work includes modifying the lambda_function to enable the text to scroll as it is read aloud with Alexa. When the detail reports are pulled, often the text is far to long to fit onto an Alexa enable display. Link to help with this can be found here: https://developer.amazon.com/en-US/docs/alexa/alexa-presentation-language/display-text-on-the-screen.html
